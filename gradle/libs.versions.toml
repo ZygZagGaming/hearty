@@ -1,7 +1,7 @@
 [versions]
 neo = { strictly = "[20.4.198,20.5)", prefer = "latest.release" }
 jei = { strictly = "[17.3,18.0)", prefer = "latest.release" }
-api = "[0.1.1,0.1.2)"#{ strictly = "[0.3.2,0.4)", prefer = "latest.release" }
+api = "[1,2)"
 neogradle = "7.0.96"
 
 [libraries]

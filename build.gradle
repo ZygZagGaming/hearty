@@ -27,7 +27,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 //}
 
 repositories {
-    mavenLocal()
+    //mavenLocal()
     maven {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
@@ -39,7 +39,7 @@ repositories {
     maven { url = "https://maven.shedaniel.me" }
     maven {
         name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/zygzaggaming/hearty")
+        url = uri("https://maven.pkg.github.com/zygzaggaming/hearty-api")
         credentials {
             username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
             password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
@@ -136,6 +136,10 @@ dependencies {
 //    archives tasks.jar
 //}
 
+tasks.named('jarJar') {
+    archiveClassifier = ""
+}
+
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
             minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
@@ -156,7 +160,7 @@ publishing {
         gpr(MavenPublication) {
             artifactId = "hearty-$minecraft_version-neoforge"
 
-            artifact tasks.jar
+            artifact tasks.jarJar
 //            artifact tasks.sourcesJar
 //            artifact tasks.javadocJar
 
