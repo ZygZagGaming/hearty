@@ -4,6 +4,7 @@ plugins {
     id "maven-publish"
     alias libs.plugins.ng.userdev
     alias libs.plugins.ng.mixin
+    alias libs.plugins.minotaur
 }
 
 idea {
@@ -210,3 +211,24 @@ publishing {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
+
+modrinth {
+    token = project.findProperty("modrinth.token") ?: System.getenv("MODRINTH_TOKEN")
+    projectId = "hearty"
+    versionNumber = System.getenv("VERSION") ?: mod_version
+    versionType = "release"
+    uploadFile = jar
+    gameVersions = ["1.20.4"]
+    loaders = ["neoforge"]
+    dependencies {
+        // scope.type
+        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+        // The type can either be `project` or `version`
+//        required.project "fabric-api" // Creates a new required dependency on Fabric API
+//        optional.version "sodium", "mc1.19.3-0.4.8" // Creates a new optional dependency on this specific version of Sodium
+    }
+
+    syncBodyFrom = rootProject.file("README.md").text
+}
+
+//tasks.modrinth.dependsOn(tasks.modrinthSyncBody)

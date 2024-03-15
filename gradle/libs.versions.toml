@@ -1,8 +1,9 @@
 [versions]
 neo = { strictly = "[20.4.198,20.5)", prefer = "latest.release" }
 jei = { strictly = "[17.3,18.0)", prefer = "latest.release" }
-api = "[1,2)"
-neogradle = "7.0.96"
+api = { strictly = "[1,2)", prefer = "latest.release" }
+neogradle = { strictly = "[7,8)", prefer = "latest.release" }
+minotaur = { strictly = "[2,3)", prefer = "latest.release" }
 
 [libraries]
 neo = { group = "net.neoforged", name = "neoforge", version.ref = "neo" }
@@ -14,3 +15,4 @@ api = { group = "io.github.zygzaggaming.hearty.api", name = "hearty-1.20.4-neofo
 [plugins]
 ng-userdev = { id = "net.neoforged.gradle.userdev", version.ref = "neogradle" }
 ng-mixin = { id = "net.neoforged.gradle.mixin", version.ref = "neogradle" }
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }

@@ -1,41 +1,64 @@
-# Hearty
- 
-[CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/hearty)  
+# Hearty<!-- modrinth_exclude.start -->
+
+[Modrinth Page](https://modrinth.com/project/hearty)<!-- modrinth_exclude.end -->
   
 A Forge mod that provides several features that change how health is displayed in Minecraft.
 
-## Features
+## For modders
+### Adding to existing Gradle project
+Insert the following block inside your `build.gradle` or `build.gradle.kts`'s `repositories` block.
 
-### Half-container hearts
-If the player has an odd max health, the final heart will display a half-container as opposed to a full one.
-
-### Half-heart merging
-If the player has an odd max health, the final half heart will be completed with the first absorption half-heart.
-
-### Double hearts (configurable)
-Makes each heart contain 1hp instead of 2hp.
-
-### Heart display priority (configurable)
-Makes withered hearts display when the player has both wither and poison.
-
-### Custom hearts
-Using IMCs, other mods can register their own custom hearts.
-  
-Each heart is serialized with the type `oshi.util.tuples.Quartet<ResourceLocation, Double, org.apache.common.lang3.function.TriFunction<Player, Level, Gui, ResourceLocation>, org.apache.common.lang3.function.TriFunction<Player, Level, Gui, Integer>>`.
-  
-The `ResourceLocation` is the heart's id.
-The `Double` is the heart's priority, e.g. what order hearts are in. For reference, full hearts are 1.0, empty is 2.0, and absorption is 3.0.  
-The first `TriFunction` is a provider for the heart's texture as a ResourceLocation. For example, `new ResourceLocation("namespace:textures/foo/bar/heart.png")` would correspond to the texture at `assets/namespace/textures/foo/bar/heart.png`.  
-The second `TriFunction` is a provider for the number of hearts to render at any given time.  
-  
-You can send an IMC during the `InterModEnqueueEvent` using a line like this:
-```java
-InterModComms.sendTo(
-        "hearty",
-        "register_heart",
-        () -> quartet
-);
+```groovy
+maven {
+    name = "GPR for Hearty"
+    url = uri("https://maven.pkg.github.com/zygzaggaming/hearty")
+    credentials {
+        username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+        password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+    }
+}
 ```
-where `quartet` is of the aforementioned type.
+Then, configure the `gpr.user` and `gpr.key` Gradle properties to your GitHub username and a personal access token with `read:packages` access.
+It is HIGHLY recommended to keep these properties in your global `gradle.properties` file (`<user>\.gradle\gradle.properties`) rather than your project's `gradle.properties`.
 
-You can also send texture provider or number provider overrides, using a similar format to above, only with "replace_number_provider" or "replace_texture_provider" and an `oshi.util.tuples.Pair<ResourceLocation, TriFunction<Player, Level, Gui, (Integer or ResourceLocation)>`, depending on which override is being used.
+If you use GitHub Actions to build your mod, the fallback `GITHUB_ACTOR` and `GITHUB_TOKEN` environment variables are already set, so don't worry about remote builds failing from lack of authentication.
+
+Then, in the same `build.gradle(.kts)`, add the following line in your `dependencies` block:
+```groovy
+implementation libs.hearty
+```
+And in your `gradle\libs.versions.toml`:
+```toml
+[versions]
+hearty = { strictly = "[<min-version>,<max-version>)", prefer = "latest.release" }
+
+[libraries]
+hearty = { id = "io.github.zygzaggaming.hearty.mod", name = "hearty-<minecraft-version>-neoforge", version.ref = "hearty" }
+```
+
+### Using the API directly
+Importing the Hearty mod directly also imports the API by extension. However, if you want your mod to interact with Hearty without packaging it as a dependency, you'll need to import the API directly.
+
+To import the API, add this block in the same place as above:
+```groovy
+maven {
+    name = "GPR for Hearty"
+    url = uri("https://maven.pkg.github.com/zygzaggaming/hearty")
+    credentials {
+        username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+        password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+    }
+}
+```
+`build.gradle(.kts)` `dependencies`:
+```groovy
+implementation libs.hearty.api
+```
+`gradle\libs.versions.toml`:
+```toml
+[versions]
+hearty-api = { strictly = "[<min-version>,<max-version>)", prefer = "latest.release" }
+
+[libraries]
+hearty-api = { id = "io.github.zygzaggaming.hearty.api", name = "hearty-<minecraft-version>-neoforge-api", version.ref = "hearty-api" }
+```
