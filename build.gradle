@@ -2,8 +2,8 @@ plugins {
     id "java-library"
     id "idea"
     id "maven-publish"
-    id "net.neoforged.gradle.userdev" version "7.0.96"
-    id "net.neoforged.gradle.mixin" version "7.0.96"
+    alias libs.plugins.ng.userdev
+    alias libs.plugins.ng.mixin
 }
 
 idea {
@@ -17,7 +17,7 @@ version = System.getenv("VERSION") ?: mod_version
 group = mod_group_id
 
 base {
-    archivesName = mod_id
+    archivesName = "$mod_id-$minecraft_version-neoforge"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -153,13 +153,52 @@ tasks.withType(ProcessResources).configureEach {
 
 publishing {
     publications {
-        register("modJar", MavenPublication) {
-            from components.java
+        gpr(MavenPublication) {
+            artifactId = "hearty-$minecraft_version-neoforge"
+
+            artifact tasks.jar
+//            artifact tasks.sourcesJar
+//            artifact tasks.javadocJar
+
+            version = System.getenv("VERSION") ?: mod_version
+
+            pom {
+                name = "hearty"
+                description = "The Minecraft mod Hearty"
+                url = "http://github.com/ZygZagGaming/hearty"
+
+                licenses {
+                    license {
+                        name = "The MIT License"
+                        url = "https://opensource.org/license/mit/"
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = "zygzaggaming"
+                        name = "Alex Finn"
+                        email = "zygzaggaming@gmail.com"
+                    }
+                }
+
+                scm {
+                    connection = "scm:git:git://github.com/ZygZagGaming/hearty.git"
+                    developerConnection = "scm:git:ssh://github.com:ZygZagGaming/hearty.git"
+                    url = "http://github.com/ZygZagGaming/"
+                }
+            }
         }
     }
     repositories {
         maven {
-            url = layout.buildDirectory.dir("repos/releases")
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/zygzaggaming/hearty")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+//            url = file("repo")
         }
     }
 }
