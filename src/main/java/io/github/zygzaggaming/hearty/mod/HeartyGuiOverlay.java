@@ -21,58 +21,62 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class HeartyGuiOverlay implements IGuiOverlay {
     @Override
     public void render(ExtendedGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
-        Minecraft mc = Minecraft.getInstance();
-        GuiContext ctx = new GuiContext(mc, gui.getCameraPlayer(), gui, guiGraphics);
+        if (!gui.getMinecraft().options.hideGui && gui.shouldDrawSurvivalElements()) {
+            gui.setupOverlayRenderState(true, false);
 
-        mc.getProfiler().push("hearty_health");
-        RenderSystem.enableBlend();
+            Minecraft mc = Minecraft.getInstance();
+            GuiContext ctx = new GuiContext(mc, gui.getCameraPlayer(), gui, guiGraphics);
 
-        Player player = (Player) mc.getCameraEntity();
-        assert player != null;
-        int health = Mth.ceil(player.getHealth());
-        //boolean highlight = ctx.gui().healthBlinkTime > (long) ctx.gui().tickCount && (ctx.gui().healthBlinkTime - (long) ctx.gui().tickCount) / 3L % 2L == 1L;
+            mc.getProfiler().push("hearty_health");
+            RenderSystem.enableBlend();
 
-        if (health < ctx.gui().lastHealth && player.invulnerableTime > 0) {
-            ctx.gui().lastHealthTime = Util.getMillis();
-            ctx.gui().healthBlinkTime = ctx.gui().tickCount + 20;
-        } else if (health > ctx.gui().lastHealth && player.invulnerableTime > 0) {
-            ctx.gui().lastHealthTime = Util.getMillis();
-            ctx.gui().healthBlinkTime = ctx.gui().tickCount + 10;
-        }
+            Player player = (Player) mc.getCameraEntity();
+            assert player != null;
+            int health = Mth.ceil(player.getHealth());
+            //boolean highlight = ctx.gui().healthBlinkTime > (long) ctx.gui().tickCount && (ctx.gui().healthBlinkTime - (long) ctx.gui().tickCount) / 3L % 2L == 1L;
 
-        if (Util.getMillis() - ctx.gui().lastHealthTime > 1000L) {
+            if (health < ctx.gui().lastHealth && player.invulnerableTime > 0) {
+                ctx.gui().lastHealthTime = Util.getMillis();
+                ctx.gui().healthBlinkTime = ctx.gui().tickCount + 20;
+            } else if (health > ctx.gui().lastHealth && player.invulnerableTime > 0) {
+                ctx.gui().lastHealthTime = Util.getMillis();
+                ctx.gui().healthBlinkTime = ctx.gui().tickCount + 10;
+            }
+
+            if (Util.getMillis() - ctx.gui().lastHealthTime > 1000L) {
+                ctx.gui().lastHealth = health;
+                ctx.gui().displayHealth = health;
+                ctx.gui().lastHealthTime = Util.getMillis();
+            }
+
             ctx.gui().lastHealth = health;
-            ctx.gui().displayHealth = health;
-            ctx.gui().lastHealthTime = Util.getMillis();
+            int healthLast = ctx.gui().displayHealth;
+
+            AttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
+            assert attrMaxHealth != null;
+            float healthMax = Math.max((float) attrMaxHealth.getValue(), Math.max(healthLast, health));
+            int absorb = Mth.ceil(player.getAbsorptionAmount());
+
+            int healthRows = Mth.ceil((healthMax + absorb) / 2.0F / 10.0F);
+            int rowHeight = Math.max(10 - (healthRows - 2), 3);
+
+            ctx.gui().random.setSeed(ctx.gui().tickCount * 312871L);
+
+            int left = ctx.gui().screenWidth / 2 - 91;
+            int top = ctx.gui().screenHeight - gui.leftHeight;
+            gui.leftHeight += (healthRows * rowHeight);
+            if (rowHeight != 10) gui.leftHeight += 10 - rowHeight;
+
+            //int regen = -1;
+            //if (player.hasEffect(MobEffects.REGENERATION)) {
+            //    regen = ctx.gui().tickCount % Mth.ceil(healthMax + 5.0F);
+            //}
+
+            renderHearts(ctx, left, top, rowHeight/*, regen, healthMax, health, healthLast, absorb, highlight*/);
+
+            RenderSystem.disableBlend();
+            mc.getProfiler().pop();
         }
-
-        ctx.gui().lastHealth = health;
-        int healthLast = ctx.gui().displayHealth;
-
-        AttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
-        assert attrMaxHealth != null;
-        float healthMax = Math.max((float) attrMaxHealth.getValue(), Math.max(healthLast, health));
-        int absorb = Mth.ceil(player.getAbsorptionAmount());
-
-        int healthRows = Mth.ceil((healthMax + absorb) / 2.0F / 10.0F);
-        int rowHeight = Math.max(10 - (healthRows - 2), 3);
-
-        ctx.gui().random.setSeed(ctx.gui().tickCount * 312871L);
-
-        int left = ctx.gui().screenWidth / 2 - 91;
-        int top = ctx.gui().screenHeight - gui.leftHeight;
-        gui.leftHeight += (healthRows * rowHeight);
-        if (rowHeight != 10) gui.leftHeight += 10 - rowHeight;
-
-        //int regen = -1;
-        //if (player.hasEffect(MobEffects.REGENERATION)) {
-        //    regen = ctx.gui().tickCount % Mth.ceil(healthMax + 5.0F);
-        //}
-
-        renderHearts(ctx, left, top, rowHeight/*, regen, healthMax, health, healthLast, absorb, highlight*/);
-
-        RenderSystem.disableBlend();
-        mc.getProfiler().pop();
     }
 
     public static void renderHearts(GuiContext ctx, int xMin, int yMin, int rowHeight/*, int regenHeartWiggle, float maxHealth, int ceilHealth, int displayHealth, int absorptionHearts, boolean isHealthBlinking*/) {
