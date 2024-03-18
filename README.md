@@ -2,7 +2,7 @@
 
 [Modrinth Page](https://modrinth.com/project/hearty)<!-- modrinth_exclude.end -->
   
-A Forge mod that provides several features that change how health is displayed in Minecraft.
+A NeoForge mod that provides several features that change how health is displayed in Minecraft.
 
 ## For modders
 ### Adding to existing Gradle project
