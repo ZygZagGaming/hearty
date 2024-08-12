@@ -48,7 +48,7 @@ repositories {
     }
 }
 
-jarJar.enable()
+//jarJar.enable()
 
 minecraft {
 //    modIdentifier = mod_id
@@ -137,9 +137,9 @@ dependencies {
 //    archives tasks.jar
 //}
 
-tasks.named('jarJar') {
-    archiveClassifier = ""
-}
+//tasks.named('jarJar') {
+//
+//}
 
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
