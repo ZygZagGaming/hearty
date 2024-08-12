@@ -21,7 +21,7 @@ base {
     archivesName = "$mod_id-$minecraft_version-neoforge"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 //tasks.withType(JavaCompile).configureEach {
 //    options.encoding = "UTF-8"
 //    options.release.set(JavaLanguageVersion.of(17).asInt())
@@ -48,14 +48,14 @@ repositories {
     }
 }
 
-jarJar.enable()
+//jarJar.enable()
 
 minecraft {
 //    modIdentifier = mod_id
-    mappings {
-        channel = official()
-        version.put "minecraft", minecraft_version
-    }
+//    mappings {
+//        channel = official()
+//        version.put "minecraft", minecraft_version
+//    }
 
     accessTransformers.file "src/main/resources/META-INF/accesstransformer.cfg"
 }
@@ -151,7 +151,7 @@ tasks.withType(ProcessResources).configureEach {
     ]
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml']) {
+    filesMatching(['META-INF/neoforge.mods.toml']) {
         expand replaceProperties + [project: project]
     }
 }
@@ -218,7 +218,7 @@ modrinth {
     versionNumber = System.getenv("VERSION") ?: mod_version
     versionType = "release"
     uploadFile = jar
-    gameVersions = ["1.20.4"]
+    gameVersions = ["1.21.1"]
     loaders = ["neoforge"]
     dependencies {
         // scope.type

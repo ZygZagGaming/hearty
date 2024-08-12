@@ -7,11 +7,13 @@ import io.github.zygzaggaming.hearty.api.HeartyRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -25,7 +27,7 @@ public class HeartyMain {
     public static Registry<HeartLayer> HEART_LAYER_REGISTRY = DeferredRegister.create(HeartyRegistries.HEART_LAYER_KEY, MODID).makeRegistry((builder) -> {});
     public static Registry<HeartType> HEART_TYPE_REGISTRY = DeferredRegister.create(HeartyRegistries.HEART_TYPE_KEY, MODID).makeRegistry((builder) -> {});
 
-    public HeartyMain(IEventBus modEventBus) {
+    public HeartyMain(IEventBus modEventBus, ModContainer modContainer) {
         if (FMLEnvironment.dist.isClient()) {
             HeartTypeRegistry.REGISTER.register(modEventBus);
             HeartLayerRegistry.REGISTER.register(modEventBus);
@@ -36,17 +38,17 @@ public class HeartyMain {
                 evt.register(HALF_HEART_LAYER_REGISTRY);
             });
 
-            modEventBus.addListener((RegisterGuiOverlaysEvent event) -> event.registerAbove(VanillaGuiOverlay.PLAYER_HEALTH.id(), new ResourceLocation(MODID, "hearty_health"), new HeartyGuiOverlay()));
+            modEventBus.addListener((RegisterGuiLayersEvent event) -> event.registerAbove(VanillaGuiLayers.PLAYER_HEALTH, ResourceLocation.fromNamespaceAndPath(MODID, "hearty_health"), new HeartyGuiLayer()));
 
-            NeoForge.EVENT_BUS.addListener((RenderGuiOverlayEvent.Pre event) -> {
-                if (event.getOverlay() == VanillaGuiOverlay.PLAYER_HEALTH.type()) event.setCanceled(true);
+            NeoForge.EVENT_BUS.addListener((RenderGuiLayerEvent.Pre event) -> {
+                if (event.getName().equals(VanillaGuiLayers.PLAYER_HEALTH)) event.setCanceled(true);
             });
 
-            HeartyConfig.register();
+            modContainer.registerConfig(ModConfig.Type.CLIENT, HeartyConfig.SPEC);
         }
     }
 
     public static ResourceLocation loc(String string) {
-        return new ResourceLocation(MODID, string);
+        return ResourceLocation.fromNamespaceAndPath(MODID, string);
     }
 }
