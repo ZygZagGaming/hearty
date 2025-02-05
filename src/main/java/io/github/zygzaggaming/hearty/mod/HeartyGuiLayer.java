@@ -32,50 +32,52 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
 
         Player player = (Player) mc.getCameraEntity();
         assert player != null;
-        int health = Mth.ceil(player.getHealth());
-        //boolean highlight = gui.healthBlinkTime > (long) gui.tickCount && (gui.healthBlinkTime - (long) gui.tickCount) / 3L % 2L == 1L;
+        if (mc.gameMode == null || mc.gameMode.canHurtPlayer()) {
+            int health = Mth.ceil(player.getHealth());
+            //boolean highlight = gui.healthBlinkTime > (long) gui.tickCount && (gui.healthBlinkTime - (long) gui.tickCount) / 3L % 2L == 1L;
 
-        if (health < gui.lastHealth && player.invulnerableTime > 0) {
-            gui.lastHealthTime = Util.getMillis();
-            gui.healthBlinkTime = gui.tickCount + 20;
-        } else if (health > gui.lastHealth && player.invulnerableTime > 0) {
-            gui.lastHealthTime = Util.getMillis();
-            gui.healthBlinkTime = gui.tickCount + 10;
-        }
+            if (health < gui.lastHealth && player.invulnerableTime > 0) {
+                gui.lastHealthTime = Util.getMillis();
+                gui.healthBlinkTime = gui.tickCount + 20;
+            } else if (health > gui.lastHealth && player.invulnerableTime > 0) {
+                gui.lastHealthTime = Util.getMillis();
+                gui.healthBlinkTime = gui.tickCount + 10;
+            }
 
-        if (Util.getMillis() - gui.lastHealthTime > 1000L) {
+            if (Util.getMillis() - gui.lastHealthTime > 1000L) {
+                gui.lastHealth = health;
+                gui.displayHealth = health;
+                gui.lastHealthTime = Util.getMillis();
+            }
+
             gui.lastHealth = health;
-            gui.displayHealth = health;
-            gui.lastHealthTime = Util.getMillis();
+            int healthLast = gui.displayHealth;
+
+            AttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
+            assert attrMaxHealth != null;
+            float healthMax = Math.max((float) attrMaxHealth.getValue(), Math.max(healthLast, health));
+            int absorb = Mth.ceil(player.getAbsorptionAmount());
+
+            int healthRows = Mth.ceil((healthMax + absorb) / 2.0F / 10.0F);
+            int rowHeight = Math.max(10 - (healthRows - 2), 3);
+
+            gui.random.setSeed(gui.tickCount * 312871L);
+
+            int left = guiGraphics.guiWidth() / 2 - 91;
+            int top = guiGraphics.guiHeight() - gui.leftHeight;
+            gui.leftHeight += (healthRows * rowHeight);
+            if (rowHeight != 10) gui.leftHeight += 10 - rowHeight;
+
+            //int regen = -1;
+            //if (player.hasEffect(MobEffects.REGENERATION)) {
+            //    regen = gui.tickCount % Mth.ceil(healthMax + 5.0F);
+            //}
+
+            renderHearts(ctx, left, top, rowHeight/*, regen, healthMax, health, healthLast, absorb, highlight*/);
+
+            RenderSystem.disableBlend();
+            mc.getProfiler().pop();
         }
-
-        gui.lastHealth = health;
-        int healthLast = gui.displayHealth;
-
-        AttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
-        assert attrMaxHealth != null;
-        float healthMax = Math.max((float) attrMaxHealth.getValue(), Math.max(healthLast, health));
-        int absorb = Mth.ceil(player.getAbsorptionAmount());
-
-        int healthRows = Mth.ceil((healthMax + absorb) / 2.0F / 10.0F);
-        int rowHeight = Math.max(10 - (healthRows - 2), 3);
-
-        gui.random.setSeed(gui.tickCount * 312871L);
-
-        int left = guiGraphics.guiWidth() / 2 - 91;
-        int top = guiGraphics.guiHeight() - gui.leftHeight;
-        gui.leftHeight += (healthRows * rowHeight);
-        if (rowHeight != 10) gui.leftHeight += 10 - rowHeight;
-
-        //int regen = -1;
-        //if (player.hasEffect(MobEffects.REGENERATION)) {
-        //    regen = gui.tickCount % Mth.ceil(healthMax + 5.0F);
-        //}
-
-        renderHearts(ctx, left, top, rowHeight/*, regen, healthMax, health, healthLast, absorb, highlight*/);
-
-        RenderSystem.disableBlend();
-        mc.getProfiler().pop();
     }
 
     public static void renderHearts(GuiContext ctx, int xMin, int yMin, int rowHeight/*, int regenHeartWiggle, float maxHealth, int ceilHealth, int displayHealth, int absorptionHearts, boolean isHealthBlinking*/) {
