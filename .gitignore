@@ -416,3 +416,5 @@ build/neoForm/neoFormJoined1.20.4-20231207.154220/steps/recompile/classes/net/mi
 build/neoForm/neoFormJoined1.20.4-20231207.154220/steps/recompile/classes/net/minecraft/client/renderer/SpriteCoordinateExpander.class
 build/neoForm/neoFormJoined1.20.4-20231207.154220/steps/recompile/classes/net/minecraft/client/renderer/ViewArea.class
 build/neoForm/neoFormJoined1.20.4-20231207.154220/steps/recompile/classes/net/minecraft/client/renderer/VirtualScreen.class
+
+*.hprof
