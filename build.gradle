@@ -79,23 +79,23 @@ runs {
     client_1 {
         configure "client"
         workingDirectory project.file("run/client/Player1")
-        programArguments.addAll "--username", "Player1"
+        arguments.addAll "--username", "Player1"
     }
 
     client_2 {
         configure "client"
         workingDirectory project.file("run/client/Player2")
-        programArguments.addAll "--username", "Player2"
+        arguments.addAll "--username", "Player2"
     }
 
     server {
         systemProperty "forge.enabledGameTestNamespaces", project.mod_id
         workingDirectory project.file("run/server")
-        programArgument "--nogui"
+        argument "--nogui"
     }
 
     data {
-        programArguments.addAll "--mod", project.mod_id, "--all", "--output", file("src/generated/resources/").getAbsolutePath(), "--existing", file("src/main/resources/").getAbsolutePath()
+        arguments.addAll "--mod", project.mod_id, "--all", "--output", file("src/generated/resources/").getAbsolutePath(), "--existing", file("src/main/resources/").getAbsolutePath()
     }
 }
 
