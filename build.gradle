@@ -28,7 +28,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 //}
 
 repositories {
-    //mavenLocal()
+    mavenLocal()
     maven {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
@@ -77,13 +77,13 @@ runs {
     }
 
     client_1 {
-        configure "client"
+        configure client
         workingDirectory project.file("run/client/Player1")
         arguments.addAll "--username", "Player1"
     }
 
     client_2 {
-        configure "client"
+        configure client
         workingDirectory project.file("run/client/Player2")
         arguments.addAll "--username", "Player2"
     }
@@ -94,7 +94,7 @@ runs {
         argument "--nogui"
     }
 
-    data {
+    clientData {
         arguments.addAll "--mod", project.mod_id, "--all", "--output", file("src/generated/resources/").getAbsolutePath(), "--existing", file("src/main/resources/").getAbsolutePath()
     }
 }
@@ -104,9 +104,9 @@ sourceSets.main.resources { srcDir "src/generated/resources" }
 dependencies {
     implementation libs.neo
     implementation libs.api
-    jarJar libs.api
+//    jarJar libs.api
 
-    runtimeOnly libs.jei
+//    runtimeOnly libs.jei
 }
 
 //tasks.jar {
@@ -218,7 +218,7 @@ modrinth {
     versionNumber = System.getenv("VERSION") ?: mod_version
     versionType = "release"
     uploadFile = jar
-    gameVersions = ["1.21.1"]
+    gameVersions = ["1.21.4"]
     loaders = ["neoforge"]
     dependencies {
         // scope.type

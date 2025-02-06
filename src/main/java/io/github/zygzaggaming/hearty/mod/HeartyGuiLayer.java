@@ -9,8 +9,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +29,7 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
 
         GuiContext ctx = new GuiContext(mc, gui.getCameraPlayer(), gui, guiGraphics);
 
-        mc.getProfiler().push("hearty_health");
+        Profiler.get().push("hearty_health");
         RenderSystem.enableBlend();
 
         Player player = (Player) mc.getCameraEntity();
@@ -76,7 +78,7 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
             renderHearts(ctx, left, top, rowHeight/*, regen, healthMax, health, healthLast, absorb, highlight*/);
 
             RenderSystem.disableBlend();
-            mc.getProfiler().pop();
+            Profiler.get().pop();
         }
     }
 
@@ -111,15 +113,15 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
     }
 
     public static void renderHeart(HalfHeartContext ctx) {
-        ctx.graphics().blitSprite(ctx.sprite(), 16, 16, 0, 0, ctx.x(), ctx.y() - 7, 0, 9, 16);
+         ctx.graphics().blitSprite(RenderType::guiTextured, ctx.sprite(), 16, 16, 0, 0, ctx.x(), ctx.y() - 7, 9, 16);
     }
 
     public static void renderLeftHalfHeart(HalfHeartContext ctx) {
-        ctx.graphics().blitSprite(ctx.sprite(), 16, 16, 0, 0, ctx.x(), ctx.y() - 7, 0, 5, 16);
+        ctx.graphics().blitSprite(RenderType::guiTextured, ctx.sprite(), 16, 16, 0, 0, ctx.x(), ctx.y() - 7, 5, 16);
     }
 
     public static void renderRightHalfHeart(HalfHeartContext ctx) {
-        ctx.graphics().blitSprite(ctx.sprite(), 16, 16, 5, 0, ctx.x() + 5, ctx.y() - 7, 4, 16);
+        ctx.graphics().blitSprite(RenderType::guiTextured, ctx.sprite(), 16, 16, 5, 0, ctx.x() + 5, ctx.y() - 7, 4, 16);
     }
 
     /*
