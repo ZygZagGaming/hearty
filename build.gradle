@@ -3,7 +3,7 @@ plugins {
     id "idea"
     id "maven-publish"
     alias libs.plugins.ng.userdev
-    alias libs.plugins.ng.mixin
+//    alias libs.plugins.ng.mixin
     alias libs.plugins.minotaur
 }
 
@@ -28,7 +28,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 //}
 
 repositories {
-    //mavenLocal()
+    mavenLocal()
     maven {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
@@ -60,16 +60,21 @@ minecraft {
     accessTransformers.file "src/main/resources/META-INF/accesstransformer.cfg"
 }
 
+configurations {
+    libraries
+    implementation.extendsFrom libraries
+}
+
 runs {
     configureEach {
         systemProperty "forge.logging.markers", "REGISTRIES"
         systemProperty "forge.logging.console.level", "debug"
 
-//        dependencies {
-//            runtime libs.api.get()
-//        }
-
         modSource project.sourceSets.main
+
+        dependencies {
+            runtime project.configurations.libraries
+        }
     }
 
     client {
@@ -102,9 +107,8 @@ runs {
 sourceSets.main.resources { srcDir "src/generated/resources" }
 
 dependencies {
+    libraries libs.api
     implementation libs.neo
-    implementation libs.api
-    jarJar libs.api
 
     runtimeOnly libs.jei
 }
@@ -160,8 +164,6 @@ publishing {
     publications {
         gpr(MavenPublication) {
             artifactId = "hearty-$minecraft_version-neoforge"
-
-            artifact tasks.jarJar
 //            artifact tasks.sourcesJar
 //            artifact tasks.javadocJar
 
