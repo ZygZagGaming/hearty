@@ -1,14 +1,14 @@
 [versions]
 neo = { strictly = "[21.1.192,21.2)", prefer = "latest.release" }
 jei = { strictly = "[19.8,19.9)", prefer = "latest.release" }
-api = "1.1.1-snapshot2"# { strictly = "[1.1.1,1.2)", prefer = "latest.release" }
+api = "neoforge-1.21.1-1.1.1"# { strictly = "[neoforge-1.21.1-1.1.1,neoforge-1.21.1-1.2)", prefer = "latest.release" }
 neogradle = "7.0.190"
 minotaur = { strictly = "[2,3)", prefer = "latest.release" }
 
 [libraries]
 neo = { group = "net.neoforged", name = "neoforge", version.ref = "neo" }
 jei = { group = "mezz.jei", name = "jei-1.21.1-neoforge", version.ref = "jei" }
-api = { group = "io.github.zygzaggaming.hearty.api", name = "hearty-1.21.1-neoforge-api", version.ref = "api" }
+api = { group = "io.github.zygzaggaming.hearty.api", name = "hearty-api", version.ref = "api" }
 
 [bundles]
 

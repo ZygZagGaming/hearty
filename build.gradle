@@ -18,7 +18,7 @@ version = System.getenv("VERSION") ?: mod_version
 group = mod_group_id
 
 base {
-    archivesName = "$mod_id-$minecraft_version-neoforge"
+    archivesName = "$mod_id"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -60,9 +60,13 @@ minecraft {
     accessTransformers.file "src/main/resources/META-INF/accesstransformer.cfg"
 }
 
-configurations {
-    libraries
-    implementation.extendsFrom libraries
+//configurations {
+//    implementation.extendsFrom jarJar
+//}
+jarJar.enable()
+
+tasks.named('jarJar') {
+
 }
 
 runs {
@@ -72,9 +76,9 @@ runs {
 
         modSource project.sourceSets.main
 
-        dependencies {
-            runtime project.configurations.libraries
-        }
+//        dependencies {
+//            runtime project.configurations.libraries
+//        }
     }
 
     client {
@@ -107,7 +111,10 @@ runs {
 sourceSets.main.resources { srcDir "src/generated/resources" }
 
 dependencies {
-    libraries libs.api
+    jarJar(group: 'io.github.zygzaggaming.hearty.api', name: 'hearty-api', version: '[neoforge-1.21.1-1.1.1, neoforge-1.21.1-1.2)') {
+        jarJar.pin(it, 'neoforge-1.21.1-1.1.1')
+    }
+    implementation libs.api
     implementation libs.neo
 
     runtimeOnly libs.jei
@@ -163,8 +170,8 @@ tasks.withType(ProcessResources).configureEach {
 publishing {
     publications {
         gpr(MavenPublication) {
-            artifactId = "hearty-$minecraft_version-neoforge"
-//            artifact tasks.sourcesJar
+            artifactId = "hearty"
+            artifact tasks.jarJar
 //            artifact tasks.javadocJar
 
             version = System.getenv("VERSION") ?: mod_version
