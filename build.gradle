@@ -227,7 +227,7 @@ modrinth {
     projectId = "hearty"
     versionNumber = System.getenv("VERSION") ?: mod_version_truncated
     versionType = "release"
-    uploadFile = jar
+    uploadFile = jarJar
     gameVersions = ["1.21.1"]
     loaders = ["neoforge"]
     dependencies {
