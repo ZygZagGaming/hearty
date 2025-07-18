@@ -140,7 +140,7 @@ dependencies {
 //}
 
 //java {
-//    toolchain.languageVersion = JavaLanguageVersion.of(17)
+//    toolchain.languageVersion = JavaL1anguageVersion.of(17)
 //    withSourcesJar()
 //}
 
@@ -157,7 +157,7 @@ tasks.withType(ProcessResources).configureEach {
             minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
             neo_version         : neo_version, neo_version_range: neo_version_range,
             loader_version_range: loader_version_range,
-            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version_truncated,
             mod_authors         : mod_authors, mod_description: mod_description,
     ]
     inputs.properties replaceProperties
@@ -224,7 +224,7 @@ tasks.withType(JavaCompile).configureEach {
 modrinth {
     token = project.findProperty("modrinth.token") ?: System.getenv("MODRINTH_TOKEN")
     projectId = "hearty"
-    versionNumber = System.getenv("VERSION") ?: mod_version
+    versionNumber = System.getenv("VERSION") ?: mod_version_truncated
     versionType = "release"
     uploadFile = jar
     gameVersions = ["1.21.1"]
