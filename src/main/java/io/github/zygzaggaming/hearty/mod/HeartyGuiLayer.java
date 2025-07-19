@@ -32,7 +32,7 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
 
         Player player = (Player) mc.getCameraEntity();
         assert player != null;
-        if (mc.gameMode == null || mc.gameMode.canHurtPlayer()) {
+        if ((mc.gameMode == null || mc.gameMode.canHurtPlayer()) && !mc.options.hideGui) {
             int health = Mth.ceil(player.getHealth());
             //boolean highlight = gui.healthBlinkTime > (long) gui.tickCount && (gui.healthBlinkTime - (long) gui.tickCount) / 3L % 2L == 1L;
 
