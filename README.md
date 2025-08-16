@@ -42,8 +42,8 @@ Importing the Hearty mod directly also imports the API by extension. However, if
 To import the API, add this block in the same place as above:
 ```groovy
 maven {
-    name = "GPR for Hearty"
-    url = uri("https://maven.pkg.github.com/zygzaggaming/hearty")
+    name = "GPR for Hearty API"
+    url = uri("https://maven.pkg.github.com/zygzaggaming/hearty-api")
     credentials {
         username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
         password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
