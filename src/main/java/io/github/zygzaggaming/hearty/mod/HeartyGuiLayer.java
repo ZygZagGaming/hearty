@@ -99,7 +99,7 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
                     for (HeartLayer layer : HeartyMain.HEART_LAYER_REGISTRY.stream().sorted().toList()) heartContext = layer.apply(heartContext);
                 }
 
-                HalfHeartContext halfHeartContext = new HalfHeartContext(heartContext, type, baseTexture, k);
+                HalfHeartContext halfHeartContext = new HalfHeartContext(heartContext, type, baseTexture, i);
                 for (HalfHeartLayer layer : HeartyMain.HALF_HEART_LAYER_REGISTRY.stream().sorted().toList()) halfHeartContext = layer.apply(halfHeartContext);
 
                 if (HeartyConfig.RENDER_DOUBLE_HEARTS.get()) renderHeart(halfHeartContext);
