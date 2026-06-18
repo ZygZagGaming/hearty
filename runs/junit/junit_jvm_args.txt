@@ -14,5 +14,5 @@ jdk.naming.dns/com.sun.jndi.dns=java.naming
 -Dforge.logging.markers=REGISTRIES
 -Dforge.logging.console.level=debug
 -DlegacyClassPath.file=C:\Users\zygza\Documents\GitHub\hearty\.gradle\configuration\neoForm\neoFormJoined1.21.1-20240808.144430\steps\writeMinecraftClasspathJunit\classpath.txt
--DignoreList=mixinextras-neoforge-0.4.1.jar,client-extra,neoforge-
+-DignoreList=mixinextras-neoforge-0.5.3.jar,client-extra,neoforge-
 -Djava.net.preferIPv6Addresses=system

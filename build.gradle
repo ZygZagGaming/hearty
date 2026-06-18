@@ -63,7 +63,7 @@ minecraft {
 //configurations {
 //    implementation.extendsFrom jarJar
 //}
-jarJar.enable()
+//jarJar.enable()
 
 tasks.named('jarJar') {
 
@@ -86,13 +86,13 @@ runs {
     }
 
     client_1 {
-        configure runTypes.client
+        runType "client"
         workingDirectory project.file("run/client/Player1")
         arguments.addAll "--username", "Player1"
     }
 
     client_2 {
-        configure runTypes.client
+        runType "client"
         workingDirectory project.file("run/client/Player2")
         arguments.addAll "--username", "Player2"
     }
@@ -111,10 +111,12 @@ runs {
 sourceSets.main.resources { srcDir "src/generated/resources" }
 
 dependencies {
-    jarJar(group: 'io.github.zygzaggaming.hearty.api', name: 'hearty-api', version: '[neoforge-1.21.1-1.1.1, neoforge-1.21.1-1.2)') {
-        jarJar.pin(it, 'neoforge-1.21.1-1.1.1')
-    }
     implementation libs.api
+    jarJar(libs.api) {
+        version {
+            prefer "1.21.1-1.1.2"
+        }
+    }
     implementation libs.neo
 
     runtimeOnly libs.jei
