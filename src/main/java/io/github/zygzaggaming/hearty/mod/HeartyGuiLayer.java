@@ -95,7 +95,7 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
                 int y = yMin - row * rowHeight;
                 if (left || HeartyConfig.RENDER_DOUBLE_HEARTS.get()) {
                     heart++;
-                    heartContext = new HeartContext(ctx, x, y, heart);
+                    heartContext = new HeartContext(HeartyMain.REGISTRIES, ctx, x, y, heart);
                     for (HeartLayer layer : HeartyMain.HEART_LAYER_REGISTRY.stream().sorted().toList()) heartContext = layer.apply(heartContext);
                 }
 

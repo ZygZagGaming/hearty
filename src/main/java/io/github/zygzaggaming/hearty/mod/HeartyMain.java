@@ -11,7 +11,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -27,7 +26,11 @@ public class HeartyMain {
     public static Registry<HalfHeartLayer> HALF_HEART_LAYER_REGISTRY = DeferredRegister.create(HeartyRegistries.HALF_HEART_LAYER_KEY, MODID).makeRegistry(builder -> {});
     public static Registry<HeartLayer> HEART_LAYER_REGISTRY = DeferredRegister.create(HeartyRegistries.HEART_LAYER_KEY, MODID).makeRegistry(builder -> {});
     public static Registry<HeartType> HEART_TYPE_REGISTRY = DeferredRegister.create(HeartyRegistries.HEART_TYPE_KEY, MODID).makeRegistry(builder -> {});
-
+    public static HeartyRegistries REGISTRIES = new HeartyRegistries(
+            HALF_HEART_LAYER_REGISTRY,
+            HEART_LAYER_REGISTRY,
+            HEART_TYPE_REGISTRY
+    );
 
     public HeartyMain(IEventBus modEventBus, ModContainer modContainer) {
         HeartTypeRegistry.REGISTER.register(modEventBus);
