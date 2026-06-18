@@ -86,13 +86,13 @@ runs {
     }
 
     client_1 {
-        configure "client"
+        configure runTypes.client
         workingDirectory project.file("run/client/Player1")
         arguments.addAll "--username", "Player1"
     }
 
     client_2 {
-        configure "client"
+        configure runTypes.client
         workingDirectory project.file("run/client/Player2")
         arguments.addAll "--username", "Player2"
     }
