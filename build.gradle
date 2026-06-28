@@ -14,7 +14,7 @@ idea {
     }
 }
 
-version = System.getenv("VERSION") ?: mod_version
+version = System.getenv("VERSION") ?: (loader + "-" + mc_version + "-"  + mod_version)
 group = mod_group_id
 
 base {
@@ -159,7 +159,7 @@ tasks.withType(ProcessResources).configureEach {
             minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
             neo_version: neo_version, neo_version_range: neo_version_range,
             loader_version_range: loader_version_range,
-            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version_truncated,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors: mod_authors, mod_description: mod_description,
             pack_format_number: pack_format_number
     ]
@@ -177,7 +177,7 @@ publishing {
             artifact tasks.jarJar
 //            artifact tasks.javadocJar
 
-            version = System.getenv("VERSION") ?: mod_version
+            version = System.getenv("VERSION") ?: (loader + "-" + mc_version + "-"  + mod_version)
 
             pom {
                 name = "hearty"
@@ -227,11 +227,11 @@ tasks.withType(JavaCompile).configureEach {
 modrinth {
     token = project.findProperty("modrinth.token") ?: System.getenv("MODRINTH_TOKEN")
     projectId = "hearty"
-    versionNumber = System.getenv("VERSION") ?: mod_version_truncated
+    versionNumber = System.getenv("VERSION") ?: mod_version
     versionType = "release"
     uploadFile = tasks.jarJar
-    gameVersions = ["1.21.1"]
-    loaders = ["neoforge"]
+    gameVersions = [mc_version]
+    loaders = [loader]
     dependencies {
         // scope.type
         // The scope can be `required`, `optional`, `incompatible`, or `embedded`

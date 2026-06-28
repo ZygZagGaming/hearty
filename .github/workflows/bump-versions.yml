@@ -1,0 +1,85 @@
+name: Manual Version Bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Select the version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      latest:
+        description: 'Whether or not the release will be marked as latest'
+        required: true
+        default: true
+        type: boolean
+
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+
+    # Permissions needed to push the version changes back to the repo
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version
+        run: |
+          CURRENT_VERSION=$(grep -E "^mod_version=" gradle.properties | cut -d'=' -f2)
+          LOADER=$(grep -E "^loader=" gradle.properties | cut -d'=' -f2)
+          MC_VERSION=$(grep -E "^mc_version=" gradle.properties | cut -d'=' -f2)
+          echo "Current version: $CURRENT_VERSION"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+          BUMP_TYPE="${{ inputs.bump_type }}"
+          if [ "$BUMP_TYPE" = "major" ]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif [ "$BUMP_TYPE" = "minor" ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          elif [ "$BUMP_TYPE" = "patch" ]; then
+            PATCH=$((PATCH + 1))
+          fi
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "New version: $NEW_VERSION"
+          sed -i "s/^mod_version=.*/mod_version=$NEW_VERSION/" gradle.properties
+          git add gradle.properties
+          git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
+          echo "NEW_TAG=$LOADER-$MC_VERSION-$NEW_VERSION OLD_TAG=$LOADER-$MC_VERSION-$MOD_VERSION" >> $GITHUB_ENV
+
+      - name: Push changes
+        run: |
+          git push origin main
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.NEW_TAG }}
+          name: Release ${{ env.NEW_TAG }}
+          body: |
+            ## What's New
+            Automated release for version ${{ env.NEW_TAG }}.
+            <https://github.com/ZygZagGaming/hearty/compare/${{ env.OLD_TAG }}...${{ env.NEW_TAG }}>
+          draft: false
+          prerelease: false
+          make_latest: ${{ inputs.mark_latest }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
