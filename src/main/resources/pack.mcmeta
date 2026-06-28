@@ -1,8 +1,8 @@
 {
     "pack": {
         "description": {
-            "text": "hearty resources"
+            "text": "Hearty resources"
         },
-        "pack_format": 34
+        "pack_format": ${pack_format_number}
     }
 }

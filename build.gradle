@@ -114,7 +114,7 @@ dependencies {
     implementation libs.api
     jarJar(libs.api) {
         version {
-            prefer "1.21.1-1.1.2"
+            prefer "1.21.1-1.2.0"
         }
     }
     implementation libs.neo
@@ -156,17 +156,17 @@ dependencies {
 
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
-            minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
-            neo_version         : neo_version, neo_version_range: neo_version_range,
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            neo_version: neo_version, neo_version_range: neo_version_range,
             loader_version_range: loader_version_range,
-            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version_truncated,
-            mod_authors         : mod_authors, mod_description: mod_description,
-            pack_format_number  : pack_format_number
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version_truncated,
+            mod_authors: mod_authors, mod_description: mod_description,
+            pack_format_number: pack_format_number
     ]
     inputs.properties replaceProperties
 
     filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
+        expand replaceProperties
     }
 }
 

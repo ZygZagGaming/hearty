@@ -39,7 +39,7 @@ license="${mod_license}"
     description='''${mod_description}'''
     side = "CLIENT"
 
-[[dependencies.hearty]] #optional
+[[dependencies.${mod_id}]] #optional
     # the modid of the dependency
     modId="neoforge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -51,7 +51,7 @@ license="${mod_license}"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 
-[[dependencies.hearty]]
+[[dependencies.${mod_id}]]
     modId="minecraft"
     type="required"
     versionRange="${minecraft_version_range}"

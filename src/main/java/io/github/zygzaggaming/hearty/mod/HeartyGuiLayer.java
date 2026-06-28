@@ -23,6 +23,9 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         Minecraft mc = Minecraft.getInstance();
+
+        if (!(mc.getCameraEntity() instanceof Player player)) return;
+
         Gui gui = mc.gui;
 
         GuiContext ctx = new GuiContext(mc, gui.getCameraPlayer(), gui, guiGraphics);
@@ -30,8 +33,6 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
         mc.getProfiler().push("hearty_health");
         RenderSystem.enableBlend();
 
-        Player player = (Player) mc.getCameraEntity();
-        assert player != null;
         if ((mc.gameMode == null || mc.gameMode.canHurtPlayer()) && !mc.options.hideGui) {
             int health = Mth.ceil(player.getHealth());
             //boolean highlight = gui.healthBlinkTime > (long) gui.tickCount && (gui.healthBlinkTime - (long) gui.tickCount) / 3L % 2L == 1L;
