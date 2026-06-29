@@ -61,7 +61,7 @@ jobs:
           sed -i "s/^mod_version=.*/mod_version=$NEW_VERSION/" gradle.properties
           git add gradle.properties
           git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
-          echo "NEW_TAG=$LOADER-$MC_VERSION-$NEW_VERSION OLD_TAG=$LOADER-$MC_VERSION-$MOD_VERSION" >> $GITHUB_ENV
+          echo "NEW_TAG=$LOADER-$MC_VERSION-$NEW_VERSION OLD_TAG=$LOADER-$MC_VERSION-$MOD_VERSION NEW_VERSION=$NEW_VERSION MC_VERSION=$MC_VERSION" >> $GITHUB_ENV
 
       - name: Push changes
         run: |
@@ -73,10 +73,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.NEW_TAG }}
-          name: Release ${{ env.NEW_TAG }}
+          name: Hearty ${{ env.NEW_VERSION }} for Neoforge ${{ env.MC_VERSION }}
           body: |
             ## What's New
-            Automated release for version ${{ env.NEW_TAG }}.
             <https://github.com/ZygZagGaming/hearty/compare/${{ env.OLD_TAG }}...${{ env.NEW_TAG }}>
           draft: false
           prerelease: false
