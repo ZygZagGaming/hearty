@@ -1,4 +1,4 @@
-name: Manual Version Bump
+name: Bump version
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ on:
           - minor
           - major
       latest:
-        description: 'Whether or not the release will be marked as latest'
+        description: 'Release as latest'
         required: true
         default: true
         type: boolean
