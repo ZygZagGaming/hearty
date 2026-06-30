@@ -69,11 +69,6 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
             gui.leftHeight += (healthRows * rowHeight);
             if (rowHeight != 10) gui.leftHeight += 10 - rowHeight;
 
-            //int regen = -1;
-            //if (player.hasEffect(MobEffects.REGENERATION)) {
-            //    regen = gui.tickCount % Mth.ceil(healthMax + 5.0F);
-            //}
-
             renderHearts(ctx, left, top, rowHeight/*, regen, healthMax, health, healthLast, absorb, highlight*/);
 
             RenderSystem.disableBlend();
@@ -100,8 +95,8 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
                     for (HeartLayer layer : HeartyMain.HEART_LAYER_REGISTRY.stream().sorted().toList()) heartContext = layer.apply(heartContext);
                 }
 
-                HalfHeartContext halfHeartContext = new HalfHeartContext(heartContext, type, baseTexture, i);
-                for (HalfHeartLayer layer : HeartyMain.HALF_HEART_LAYER_REGISTRY.stream().sorted().toList()) halfHeartContext = layer.apply(halfHeartContext);
+                HeartUnitContext halfHeartContext = new HeartUnitContext(heartContext, type, baseTexture, i);
+                for (HeartUnitLayer layer : HeartyMain.HEART_UNIT_LAYER_REGISTRY.stream().sorted().toList()) halfHeartContext = layer.apply(halfHeartContext);
 
                 if (HeartyConfig.RENDER_DOUBLE_HEARTS.get()) renderHeart(halfHeartContext);
                 else if (left) renderLeftHalfHeart(halfHeartContext);
@@ -111,15 +106,15 @@ public class HeartyGuiLayer implements LayeredDraw.Layer {
         }
     }
 
-    public static void renderHeart(HalfHeartContext ctx) {
+    public static void renderHeart(HeartUnitContext ctx) {
         ctx.graphics().blitSprite(ctx.sprite(), 16, 16, 0, 0, ctx.x(), ctx.y() - 7, 0, 9, 16);
     }
 
-    public static void renderLeftHalfHeart(HalfHeartContext ctx) {
+    public static void renderLeftHalfHeart(HeartUnitContext ctx) {
         ctx.graphics().blitSprite(ctx.sprite(), 16, 16, 0, 0, ctx.x(), ctx.y() - 7, 0, 5, 16);
     }
 
-    public static void renderRightHalfHeart(HalfHeartContext ctx) {
+    public static void renderRightHalfHeart(HeartUnitContext ctx) {
         ctx.graphics().blitSprite(ctx.sprite(), 16, 16, 5, 0, ctx.x() + 5, ctx.y() - 7, 4, 16);
     }
 

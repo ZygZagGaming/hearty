@@ -61,13 +61,15 @@ jobs:
           sed -i "s/^mod_version=.*/mod_version=$NEW_VERSION/" gradle.properties
           git add gradle.properties
           git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
-          echo "NEW_TAG=$LOADER-$MC_VERSION-$NEW_VERSION OLD_TAG=$LOADER-$MC_VERSION-$MOD_VERSION NEW_VERSION=$NEW_VERSION MC_VERSION=$MC_VERSION" >> $GITHUB_ENV
-
+          echo "NEW_TAG=$LOADER-$MC_VERSION-$NEW_VERSION" >> $GITHUB_ENV
+          echo "OLD_TAG=$LOADER-$MC_VERSION-$CURRENT_VERSION" >> $GITHUB_ENV
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "MC_VERSION=$MC_VERSION" >> $GITHUB_ENV
       - name: Push changes
         run: |
-          git push origin main
-          git tag $NEW_TAG
-          git push origin $NEW_TAG
+          git push origin ${{ github.ref_name }}
+          git tag ${{ env.NEW_TAG }}
+          git push origin ${{ env.NEW_TAG }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -80,5 +82,6 @@ jobs:
           draft: false
           prerelease: false
           make_latest: ${{ inputs.mark_latest }}
+          token: ${{ secrets.ACTIONS_TOKEN }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}

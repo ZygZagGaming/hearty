@@ -1,7 +1,7 @@
 [versions]
 neo = "21.1.192"#{ strictly = "[21.1.192,21.2)", prefer = "latest.release" }
 jei = { strictly = "[19.8,19.9)", prefer = "latest.release" }
-api = "neoforge-1.21.1-1.2.0"# { strictly = "[neoforge-1.21.1-1.1.1,neoforge-1.21.1-1.2)", prefer = "latest.release" }
+api = "neoforge-1.21.1-1.2.1"# { strictly = "[neoforge-1.21.1-1.1.1,neoforge-1.21.1-1.2)", prefer = "latest.release" }
 neogradle = "7.0.190"
 minotaur = { strictly = "[2,3)", prefer = "latest.release" }
 

@@ -1,8 +1,8 @@
 package io.github.zygzaggaming.hearty.mod;
 
-import io.github.zygzaggaming.hearty.api.HalfHeartLayer;
 import io.github.zygzaggaming.hearty.api.HeartLayer;
 import io.github.zygzaggaming.hearty.api.HeartType;
+import io.github.zygzaggaming.hearty.api.HeartUnitLayer;
 import io.github.zygzaggaming.hearty.api.HeartyRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -23,11 +23,11 @@ public class HeartyMain {
     public static final String MODID = "hearty";
     //public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static Registry<HalfHeartLayer> HALF_HEART_LAYER_REGISTRY = DeferredRegister.create(HeartyRegistries.HALF_HEART_LAYER_KEY, MODID).makeRegistry(builder -> {});
+    public static Registry<HeartUnitLayer> HEART_UNIT_LAYER_REGISTRY = DeferredRegister.create(HeartyRegistries.HEART_UNIT_LAYER_KEY, MODID).makeRegistry(builder -> {});
     public static Registry<HeartLayer> HEART_LAYER_REGISTRY = DeferredRegister.create(HeartyRegistries.HEART_LAYER_KEY, MODID).makeRegistry(builder -> {});
     public static Registry<HeartType> HEART_TYPE_REGISTRY = DeferredRegister.create(HeartyRegistries.HEART_TYPE_KEY, MODID).makeRegistry(builder -> {});
     public static HeartyRegistries REGISTRIES = new HeartyRegistries(
-            HALF_HEART_LAYER_REGISTRY,
+            HEART_UNIT_LAYER_REGISTRY,
             HEART_LAYER_REGISTRY,
             HEART_TYPE_REGISTRY
     );
@@ -35,11 +35,11 @@ public class HeartyMain {
     public HeartyMain(IEventBus modEventBus, ModContainer modContainer) {
         HeartTypeRegistry.REGISTER.register(modEventBus);
         HeartLayerRegistry.REGISTER.register(modEventBus);
-        HalfHeartLayerRegistry.REGISTER.register(modEventBus);
+        HeartUnitLayerRegistry.REGISTER.register(modEventBus);
         modEventBus.addListener((NewRegistryEvent evt) -> {
             evt.register(HEART_TYPE_REGISTRY);
             evt.register(HEART_LAYER_REGISTRY);
-            evt.register(HALF_HEART_LAYER_REGISTRY);
+            evt.register(HEART_UNIT_LAYER_REGISTRY);
         });
 
         modEventBus.addListener((RegisterGuiLayersEvent event) -> event.registerAbove(VanillaGuiLayers.PLAYER_HEALTH, ResourceLocation.fromNamespaceAndPath(MODID, "hearty_health"), new HeartyGuiLayer()));

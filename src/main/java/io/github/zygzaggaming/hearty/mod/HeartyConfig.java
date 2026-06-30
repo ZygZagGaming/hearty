@@ -1,8 +1,5 @@
 package io.github.zygzaggaming.hearty.mod;
 
-import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class HeartyConfig {
